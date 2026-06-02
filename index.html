@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AI Engineer Melbourne 2026 — Schedule</title>
+<style>
+  :root{
+    --bg:#faf9f5; --surface:#ffffff; --surface2:#f1efe8;
+    --text:#1f1e1c; --muted:#6b6a64; --hint:#8f8e86;
+    --border:rgba(0,0,0,0.12); --border2:rgba(0,0,0,0.22);
+    --accent:#185fa5; --accent-bg:#e6f1fb;
+    --clash:#a32d2d; --clash-bg:#fceaea;
+    --radius:12px; --radius-sm:8px;
+    --maxw:1100px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1f1e1b; --surface:#2a2926; --surface2:#323029;
+      --text:#eceae3; --muted:#a6a49b; --hint:#86847c;
+      --border:rgba(255,255,255,0.14); --border2:rgba(255,255,255,0.26);
+      --accent:#85b7eb; --accent-bg:#10314f;
+      --clash:#f09595; --clash-bg:#3a1414;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:16px 14px 64px;}
+  header h1{font-size:19px; font-weight:600; margin:0 0 2px;}
+  header p{font-size:13px; color:var(--muted); margin:0 0 14px;}
+  .bar{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:12px;}
+  .seg{display:inline-flex; background:var(--surface2); border-radius:var(--radius-sm); padding:3px; gap:2px;}
+  .seg button{
+    border:0; background:transparent; color:var(--muted); font-size:14px;
+    padding:7px 14px; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:500;
+  }
+  .seg button.on{background:var(--surface); color:var(--text); box-shadow:0 1px 2px rgba(0,0,0,0.08);}
+  .spacer{flex:1;}
+  .pickbtn{
+    border:1px solid var(--border2); background:var(--surface); color:var(--text);
+    font-size:14px; font-weight:500; padding:7px 12px; border-radius:var(--radius-sm); cursor:pointer; font-family:inherit;
+    display:inline-flex; align-items:center; gap:7px;
+  }
+  .pickbtn .badge{background:var(--accent); color:#fff; border-radius:20px; font-size:12px; min-width:20px; text-align:center; padding:1px 6px;}
+  #search{
+    width:100%; padding:9px 12px; font-size:15px; font-family:inherit;
+    border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface); color:var(--text);
+    margin-bottom:12px;
+  }
+  #search::placeholder{color:var(--hint);}
+
+  .scroller{overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--border); border-radius:var(--radius); background:var(--surface);}
+  .grid{position:relative; min-width:640px;}
+  .colhead{
+    display:grid; grid-template-columns:46px repeat(4,1fr);
+    position:sticky; top:0; z-index:5; background:var(--surface);
+    border-bottom:1px solid var(--border);
+  }
+  .colhead .ch{padding:9px 8px; border-left:1px solid var(--border);}
+  .colhead .ch:first-child{border-left:0;}
+  .colhead .ch .rm{font-size:13px; font-weight:600;}
+  .colhead .ch .tk{font-size:11px; color:var(--muted);}
+  .body{display:grid; grid-template-columns:46px repeat(4,1fr); position:relative;}
+  .gutter{position:relative;}
+  .tick{position:absolute; left:0; right:0; border-top:1px dashed var(--border);}
+  .tick span{position:absolute; top:-8px; left:4px; font-size:11px; color:var(--hint); background:var(--surface); padding:0 2px;}
+  .col{position:relative; border-left:1px solid var(--border);}
+  .band{position:absolute; left:46px; right:0; background:var(--surface2); opacity:0.6; display:flex; align-items:center; justify-content:center; z-index:0;}
+  .band span{font-size:11px; color:var(--muted); font-weight:500;}
+  .sess{
+    position:absolute; left:3px; right:3px; z-index:2; overflow:hidden;
+    background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--tk,#888);
+    border-radius:6px; padding:5px 7px; cursor:pointer;
+  }
+  .sess:hover{border-color:var(--border2);}
+  .sess.sel{background:var(--accent-bg); border-color:var(--accent); border-left-color:var(--accent);}
+  .sess .st{font-size:10px; color:var(--muted);}
+  .sess .ti{font-size:12px; font-weight:600; line-height:1.25; margin:1px 0 0;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
+  .sess .sp{font-size:11px; color:var(--muted); margin-top:1px;
+    display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;}
+  .sess.dim{opacity:0.25;}
+  .star{position:absolute; top:3px; right:3px; width:20px; height:20px; line-height:20px; text-align:center; font-size:13px; border-radius:50%; color:var(--muted); background:transparent;}
+  .sess.sel .star{color:var(--accent);}
+
+  .daygroup h2{font-size:15px; font-weight:600; margin:18px 0 8px; padding-bottom:6px; border-bottom:1px solid var(--border);}
+  .pcard{
+    background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--tk,#888);
+    border-radius:var(--radius-sm); padding:10px 12px; margin-bottom:8px; display:flex; gap:10px; align-items:flex-start;
+  }
+  .pcard.clash{border-color:var(--clash); background:var(--clash-bg);}
+  .pcard .when{min-width:96px; font-size:13px; font-weight:600;}
+  .pcard .meta{flex:1; min-width:0;}
+  .pcard .meta .ti{font-size:14px; font-weight:600; line-height:1.3;}
+  .pcard .meta .sp{font-size:12px; color:var(--muted); margin-top:2px;}
+  .pcard .meta .rm{font-size:12px; color:var(--muted); margin-top:3px;}
+  .clashtag{display:inline-block; font-size:11px; font-weight:600; color:var(--clash); border:1px solid var(--clash); border-radius:20px; padding:0 7px; margin-left:6px;}
+  .rmbtn{border:0; background:transparent; color:var(--muted); cursor:pointer; font-size:18px; line-height:1; padding:2px 4px;}
+  .empty{text-align:center; color:var(--muted); padding:40px 20px; font-size:14px;}
+  .toolrow{display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 4px;}
+  .toolrow button{border:1px solid var(--border2); background:var(--surface); color:var(--text); font-size:13px; padding:6px 11px; border-radius:var(--radius-sm); cursor:pointer; font-family:inherit;}
+  .summary{font-size:13px; color:var(--muted); margin:2px 0 8px;}
+
+  .overlay{position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:flex-end; justify-content:center; z-index:50;}
+  .overlay.show{display:flex;}
+  .modal{background:var(--surface); width:100%; max-width:560px; border-radius:16px 16px 0 0; padding:18px 18px calc(20px + env(safe-area-inset-bottom)); max-height:86vh; overflow-y:auto;}
+  @media(min-width:600px){ .overlay{align-items:center;} .modal{border-radius:16px;} }
+  .modal .mtop{display:flex; justify-content:space-between; gap:10px; align-items:flex-start;}
+  .modal h3{font-size:17px; font-weight:600; margin:0 0 4px; line-height:1.3;}
+  .modal .mclose{border:0; background:var(--surface2); color:var(--text); width:30px; height:30px; border-radius:50%; font-size:18px; cursor:pointer; flex:none;}
+  .modal .mmeta{font-size:13px; color:var(--muted); margin:6px 0;}
+  .modal .mdesc{font-size:14px; line-height:1.6; margin:12px 0 16px;}
+  .modal .madd{width:100%; border:1px solid var(--accent); background:var(--accent); color:#fff; font-size:15px; font-weight:600; padding:12px; border-radius:var(--radius-sm); cursor:pointer; font-family:inherit;}
+  .modal .madd.rem{background:transparent; color:var(--accent);}
+  footer{font-size:12px; color:var(--hint); margin-top:20px; line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>AI Engineer Melbourne 2026</h1>
+    <p>3–4 June 2026 · ACMI &amp; Federation Square. Tap a session for detail, tap the star to add it to your picks.</p>
+  </header>
+
+  <div class="bar">
+    <div class="seg" id="viewSeg">
+      <button data-view="timeline" class="on">Timeline</button>
+      <button data-view="picks">My picks</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="pickbtn" id="goPicks"><span>★</span> Picks <span class="badge" id="pickCount">0</span></button>
+  </div>
+
+  <div id="timelineView">
+    <div class="bar">
+      <div class="seg" id="daySeg">
+        <button data-day="1" class="on">Wed 3 Jun</button>
+        <button data-day="2">Thu 4 Jun</button>
+      </div>
+    </div>
+    <input id="search" type="text" placeholder="Search title or speaker…" autocomplete="off" />
+    <div class="scroller">
+      <div class="grid">
+        <div class="colhead" id="colhead"></div>
+        <div class="body" id="body"></div>
+      </div>
+    </div>
+    <div id="alsoOn"></div>
+  </div>
+
+  <div id="picksView" style="display:none;">
+    <div class="summary" id="picksSummary"></div>
+    <div class="toolrow">
+      <button id="copyBtn">Copy as text</button>
+      <button id="clearBtn">Clear all picks</button>
+    </div>
+    <div id="picksList"></div>
+  </div>
+
+  <footer>
+    Your selections are saved on this device only (localStorage) — nothing is uploaded.
+    Schedule data from data.webdirections.org. Times and rooms may change; check the official site on the day.
+  </footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal"></div>
+</div>
+
+<script id="data" type="application/json">
+[
+{"id":"ad17977a","d":1,"s":"09:30","e":"09:40","t":"Welcome","sp":"John Allsopp","r":"Cinema 1","tr":"Keynote","ty":"Housekeeping","ds":"Opening of the conference."},
+{"id":"6229fde5","d":1,"s":"09:35","e":"09:40","t":"Opening Words","sp":"Ashling James","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"Opening words from the Victorian Government."},
+{"id":"eee65054","d":1,"s":"09:40","e":"09:58","t":"State of the AI Model Landscape","sp":"George Cameron, Artificial Analysis","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"Trade-offs between leading models across intelligence, speed, price and token usage, grounded in independent benchmarking, plus where AI is heading."},
+{"id":"cfbcf295","d":1,"s":"10:00","e":"10:20","t":"Token Town (why compute strategy is product strategy)","sp":"Sarah Sachs, Notion","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"What you actually pay per task in production, and a playbook for staying genuinely multi-provider and keeping leverage."},
+{"id":"851ec294","d":1,"s":"10:20","e":"10:40","t":"Everything Is a Factory","sp":"Geoff Huntley, Latent Patterns","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"From the Ralph Wiggum Loop to Loom and beyond: what happens when code becomes a commodity and engineering becomes orchestration."},
+{"id":"afe2b74f","d":1,"s":"10:40","e":"11:00","t":"Why Your Coding Agent Forgets Everything","sp":"Igor Costa, Autohand AI","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"Why today's agents are stateless and what changes when they can learn, remember and improve over time."},
+{"id":"101adb53","d":1,"s":"11:00","e":"11:20","t":"Three Lanes Below One Millisecond: A Rust SDK for Gemini Live","sp":"Vamsi Ramakrishnan, Google Cloud","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"Building gemini-rs, an open-source Rust SDK for full-duplex voice agents on the Gemini Multimodal Live protocol."},
+{"id":"9149fbd5","d":1,"s":"11:20","e":"11:30","t":"Keynote outro","sp":"John Allsopp","r":"Cinema 1","tr":"Keynote","ty":"Housekeeping","ds":"Wrapping the first session before the break."},
+
+{"id":"a68b4250","d":1,"s":"12:30","e":"12:48","t":"Evaluation Precedes Evolution: Rubrics as the Load-Bearing Infrastructure of Self-Improving Agents","sp":"Tanya Dixit, Google","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Why rubrics, not prompts or scaffolds, are the real bottleneck for self-improving agents, with five principles for building one."},
+{"id":"2d53e279","d":1,"s":"12:50","e":"13:08","t":"Beyond Forgetful Bots: Architectural Patterns for Persistent, Proactive Claw-Style AI Agents","sp":"Navan Tirupathi, Arivminds","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Hub-and-spoke separation, ephemeral vs persistent state, and security boundaries for always-on Claw-family agents."},
+{"id":"bb1975f2","d":1,"s":"13:10","e":"13:28","t":"Shipping Sandboxed Workers for Notion Agents","sp":"Adam Hudson, Notion","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"How Notion lets developers extend agents with custom code, and how it runs untrusted code safely in isolation."},
+{"id":"de8657a0","d":1,"s":"13:30","e":"13:48","t":"Close your agentic loop","sp":"Moss Ebeling, Optiver Asia Pacific","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Building automated feedback so agents can check their own work instead of relying on you as the loop."},
+{"id":"6efff0dd","d":1,"s":"13:50","e":"14:08","t":"How Many Agents Are Too Many? The Hidden Cost of Multi-Agent Systems","sp":"Anannya Roy Chowdhury, AWS","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"When multi-agent designs add value and when a simpler approach wins, with real metrics and trade-offs."},
+{"id":"ae417b14","d":1,"s":"14:10","e":"14:28","t":"Kill the God Agent","sp":"Adesh Gairola, raxIT Labs","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Three patterns to isolate agent capabilities, scope authorization per task, and enforce policy outside the LLM."},
+{"id":"c9667f3a","d":1,"s":"15:30","e":"15:48","t":"Agent Observability: Monitoring and Understanding Agents at Internet Scale","sp":"Daniel Nadasi, Google","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Google's approach to knowing what agents are doing and how to achieve both speed and safety at scale."},
+{"id":"924ae0be","d":1,"s":"15:50","e":"16:08","t":"Our AI Hallucinated in Production: How We Fixed It With Evals","sp":"Yicheng Guo, REA Group","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Building an evaluation stack with LLM-as-judge to ship REA's Property Highlights feature safely at scale."},
+{"id":"2c0743b7","d":1,"s":"16:10","e":"16:28","t":"The Application Layer Is the New Research Lab","sp":"Abdul Karim","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Why every vertical AI company is now its own applied research lab, and how to staff for it."},
+{"id":"83e651e5","d":1,"s":"16:30","e":"16:48","t":"Orbital Lasers vs For Loops: Economically Matching Models to Tasks","sp":"Stephen Sennett, V2 AI","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"A practical framework for matching tasks to the right model tier instead of defaulting to the biggest model."},
+{"id":"0599f7f9","d":1,"s":"16:50","e":"17:08","t":"Your AI Can't Engineer (Yet)","sp":"Theodoros Galanos, Aurecon","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"aecbench, an open benchmark for real engineering tasks across 12 disciplines where LLMs confidently fail."},
+{"id":"d5c78686","d":1,"s":"17:10","e":"17:28","t":"Flue: The Agent Harness Framework, at Cloudflare","sp":"Michael Hart, Cloudflare","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"An open-source programmable agent harness and how it's used at Cloudflare and elsewhere."},
+
+{"id":"59f339cd","d":1,"s":"12:30","e":"12:48","t":"Fail fast, fix faster: Why faster AI models beat smarter ones","sp":"AJ Fisher","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Why loop velocity, not raw model intelligence, is becoming the dominant factor in AI-assisted engineering."},
+{"id":"bb99f984","d":1,"s":"12:50","e":"13:08","t":"Building Frameworks Building Systems","sp":"Ally Macdonald, Stile Education","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Vibing a CI system that delivers 200 interactive science and maths games, with the right guardrails and observability."},
+{"id":"3a143407","d":1,"s":"13:10","e":"13:28","t":"Why AI coding tools might not make the slightest difference","sp":"Jason Cornwall, SEEK","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Using Theory of Constraints at SEEK to find the real delivery bottlenecks, worth $1.5m/year in measured gains."},
+{"id":"c6901280","d":1,"s":"13:30","e":"13:48","t":"Constitutional Prompting: Making AI Coding Agents Reliable Without the Iteration Tax","sp":"Prem Pillai, Block Inc","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Encoding standards into agent specs upfront to eliminate the runtime iteration loop, powering rp1's 36 agents at Block."},
+{"id":"a8145536","d":1,"s":"13:50","e":"14:08","t":"From Zero to Production: How 15 Engineers Shipped a Production LLM Product with AI Coding Tools","sp":"Michael Zhang, MYOB","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"How a small MYOB team shipped an embedded AI chat experience, leaning on Cursor and Claude Code throughout."},
+{"id":"8f1128aa","d":1,"s":"14:10","e":"14:28","t":"Multi-Armed Bandits: The Scientific Shotgun for Evals","sp":"Ron Au, Canva (Leonardo.Ai)","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Using multi-armed bandits instead of rigid A/B tests to surface ideal models, prompts and harnesses."},
+{"id":"f45cb6cc","d":1,"s":"15:30","e":"15:48","t":"Engineering for the Agentic Web When 50% of Your Traffic is Robots","sp":"Janna Malikova, Tomato Elephant Studio","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Re-architecting how a business presents content when half your visitors are AI agents and unknown browsers."},
+{"id":"6fcd869f","d":1,"s":"15:50","e":"16:08","t":"The AI Control Plane: When Your Infrastructure Becomes the Context Window","sp":"Bojan Zivic, V2ai","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Treating infrastructure as a queryable data layer with policy-as-code guardrails agents reason against."},
+{"id":"98cd77b8","d":1,"s":"16:10","e":"16:28","t":"Treating Infrastructure as Data: Building an AI-Native Control Plane","sp":"Jeffrey Aven, StackQL Studios","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Using the StackQL MCP server so agents can query, provision and update multi-cloud resources."},
+{"id":"43c59b31","d":1,"s":"16:30","e":"16:48","t":"Your Agent Doesn't Like Your APIs","sp":"Mike Chambers, AWS","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Why human-oriented REST APIs waste agent tokens, and how outcome-oriented tools fix it. Live demo."},
+{"id":"c4331a08","d":1,"s":"16:50","e":"17:08","t":"Agentic Self-Healing in Production","sp":"Jack McNicol, SuperIT","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Patterns and guardrails for agents that monitor, diagnose and recover failing pipelines without humans."},
+{"id":"cbdec3ec","d":1,"s":"17:10","e":"17:28","t":"How Canva built an Agentic Support Experience using Langfuse Observability","sp":"Sergey Iakovlev & Sahil Bahl, Canva","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Taking Canva's AI support from MVP to 250M+ users with tracing, prompt management and continuous evals."},
+
+{"id":"8e52cb75","d":1,"s":"12:30","e":"12:55","t":"Beyond Silicon Valley: Building AI Governance on the Fair Go Principle","sp":"Aubrey Blanche, The Mathpath","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"A distinctly Australian responsibility framework positioning AI governance as a collective responsibility."},
+{"id":"193d8c66","d":1,"s":"13:00","e":"13:25","t":"Stop Blocking, Start Building: Rethinking Governance for the Agentic Era","sp":"Hamish Songsmith, ryora.ai","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"The GRASP framework for categorizing agentic risk, and using observability as governance."},
+{"id":"377b9ced","d":1,"s":"13:30","e":"13:55","t":"Having your cake and eating it: An implementation guide for privacy with AI","sp":"Nick Lothian","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"Private models, TEEs, differential privacy, federated learning and homomorphic encryption, from production experience."},
+{"id":"84770edf","d":1,"s":"14:00","e":"14:25","t":"Panel: Governance & Ethics","sp":"Andrew Murphy with Aubrey Blanche, Hamish Songsmith, Nick Lothian","r":"Swinburne Studio","tr":"Leadership","ty":"Panel","ds":"How principles, operational frameworks and hands-on privacy implementation come together in practice."},
+{"id":"38c12ec5","d":1,"s":"15:30","e":"15:55","t":"Regulatory AI: Building Intelligent Compliance into Financial Operating Systems","sp":"Theo Adis, Accelerate Funding Group","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"A Regulatory AI framework embedding compliance, risk and governance into a financial platform."},
+{"id":"8dea2213","d":1,"s":"16:00","e":"16:25","t":"19Cabs: 1115 drivers, 500 customers, 90 days from idea","sp":"Balram Singh, Publicis Sapient","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"Using production data to solve marketplace problems like fake bookings and driver-ride matching."},
+{"id":"e6550831","d":1,"s":"16:30","e":"16:55","t":"Enabling Safe AI Experimentation for Non-Technical Founders","sp":"Inga Pflaumer","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"How a pre-seed startup without technical leadership built and iterated safely using lightweight guardrails."},
+{"id":"95401c3b","d":1,"s":"17:00","e":"17:25","t":"Panel: Case Studies","sp":"AJ Fisher with Theo Adis, Balram Singh, Inga Pflaumer","r":"Swinburne Studio","tr":"Leadership","ty":"Panel","ds":"What it really took to ship AI into live businesses across finance, transport and agent tooling."},
+
+{"id":"6245259c","d":1,"s":"11:45","e":"12:05","t":"Build long running AI agents that pause resume and never lose context with ADK","sp":"Nakul Gowdra, Google","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"A three-pillar architecture using Google's ADK for durable, long-running agentic workflows."},
+{"id":"6056e3a7","d":1,"s":"12:10","e":"12:30","t":"AI Hamsters: Circling Your Way to Success","sp":"Muhammad Ali, ClickHouse","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Using Langfuse traces, scores and evals to know whether each iteration loop is actually moving you forward."},
+{"id":"288275a3","d":1,"s":"12:40","e":"13:00","t":"Optimising GenAI at Runtime with Experimentation and Guardrails","sp":"Aaron Montana, LaunchDarkly","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Safely experimenting with models and prompts at runtime using targeted rollouts and online evaluation."},
+{"id":"d3dcc0ae","d":1,"s":"13:10","e":"13:20","t":"The State of the AI Engineering Job Market in Australia","sp":"Jake Maloney, AI Jobs Australia","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Which roles are in demand, what salaries look like, and what employers want in AI engineering hires."},
+{"id":"66368878","d":1,"s":"13:25","e":"13:35","t":"Who Needs a LoRA?","sp":"Charli Posner, Stile Education","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Style-faithful editing of hand-drawn illustrations using an image model you haven't fine-tuned."},
+{"id":"815d54fe","d":1,"s":"13:40","e":"13:50","t":"Don't Be Cheap: AI and the Appearance of Engineering","sp":"Birger Halfmeier, DoiT International","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"The line between frugal and cheap AI use, and what happens when demanding work becomes optional."},
+{"id":"5de6fa13","d":1,"s":"13:55","e":"14:05","t":"The Software Engineer Who Don't Code","sp":"Yasith Fernando","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Staying effective as engineers shift from authoring code to defining problems and steering agents."},
+{"id":"dc3cf8d1","d":1,"s":"14:10","e":"14:20","t":"How to Get Fired as an AI Engineer","sp":"Kanish Gosain, Radical Intelligence","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"The new engineering bar forming as code gets easier and judgement gets scarcer."},
+{"id":"02c0c449","d":1,"s":"14:25","e":"14:35","t":"The Red Flags of Vibe Coding a Dating app","sp":"Karina Pamamull","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"What happens when you rely on instinct and prompts to design for human connection."},
+{"id":"7fdd6c5a","d":1,"s":"14:40","e":"15:00","t":"One Tool to Rule them all: Building a Fast AI Agent for Real-Time Response","sp":"Ryan Samarakoon, Optiver","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Building a fast, reliable agent for live risk limit breaches using only a Python interpreter."},
+{"id":"a3167048","d":1,"s":"15:40","e":"16:00","t":"Everyone Wants AI Capacity Now. Few Are Actually Running It.","sp":"Daniel Apps, ResetData","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"What it takes to make AI capacity production-ready, sovereign, and built beyond the model."},
+{"id":"1c90e24b","d":1,"s":"16:10","e":"16:20","t":"The Agentic Contract","sp":"Matt Doughty, Prefactor","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"A practical framework for defining agentic contracts and managing quality and risk in production."},
+{"id":"e16a1159","d":1,"s":"16:25","e":"16:35","t":"Democratizing Frontier LLMs on any Desktop PC","sp":"Obadiah Pewee, Monadd-AI","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Running 100B-600B+ parameter MoE models offline on consumer hardware via storage-centric inference. Live demo."},
+{"id":"b0119233","d":1,"s":"16:40","e":"17:00","t":"Code Trust and Verification for the AI Era","sp":"Andre Kolodochka, Sonar","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Using SonarQube as an independent verification layer for AI-generated code."},
+{"id":"ff94bb93","d":1,"s":"17:05","e":"17:15","t":"Vibe-coded Multiplayer Video Games","sp":"Dr Sam Donegan, MLAI","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"A workflow for building fully-fledged multiplayer online games without coding."},
+
+{"id":"91c4de8e","d":1,"s":"08:00","e":"09:30","t":"Registration","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Doors open at 8am with barista coffee and exhibitors handing out swag. Zinc, Federation Square."},
+{"id":"9904b05b","d":1,"s":"11:30","e":"12:30","t":"Lunch","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Food, coffee and hallway-track sessions. Zinc & Cameo, ACMI."},
+{"id":"272116fd","d":1,"s":"14:30","e":"15:30","t":"Afternoon break","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Extended break ahead of the final session. Zinc & Cameo, ACMI."},
+{"id":"500f9164","d":1,"s":"17:30","e":"19:30","t":"Reception","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Day-one close drinks courtesy of Stile. Zinc."},
+{"id":"b3aaefc8","d":1,"s":"19:30","e":"21:30","t":"Speaker dinner","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Leadership ticket holders join speakers. Hosted by Cloudflare. Lightwell, ACMI."},
+
+{"id":"24ce6cdc","d":2,"s":"09:00","e":"09:05","t":"Welcome — Day 2","sp":"John Allsopp","r":"Cinema 1","tr":"Keynote","ty":"Housekeeping","ds":"Welcome back to day two."},
+{"id":"bd68170e","d":2,"s":"09:10","e":"09:40","t":"Keynote","sp":"Jeremy Howard, Answer.AI & fast.ai","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"Morning keynote from Jeremy Howard."},
+{"id":"cc043bba","d":2,"s":"09:40","e":"09:58","t":"Craft in the Time of Agents","sp":"Annie Vella, Westpac New Zealand","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"Why supervisory engineering erodes joy, and how to engineer the conditions for it back, drawn from Masters research."},
+{"id":"b1f400a3","d":2,"s":"10:00","e":"10:20","t":"What If You Never Needed an API Key Again? Building a Mesh LLM From Spare Compute","sp":"Mic Neale, Block","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"Building a mesh LLM from spare compute."},
+{"id":"ea1aae09","d":2,"s":"10:20","e":"10:38","t":"Towards Long-Horizon Tasks","sp":"Zixuan Li, Z.ai","r":"Cinema 1","tr":"Keynote","ty":"Keynote","ds":"A framework for measuring and training long-horizon capabilities: sub-goal setting, error recovery and persistence. (Room not specified in source; placed in Cinema 1.)"},
+{"id":"c40ced03","d":2,"s":"10:50","e":"10:55","t":"Morning keynote outro","sp":"John Allsopp","r":"Cinema 1","tr":"Keynote","ty":"Housekeeping","ds":"Wrapping the morning keynotes."},
+
+{"id":"4648eedf","d":2,"s":"12:00","e":"12:18","t":"Deploying AI at the Edge: Model Compression and Hardware-Aware Optimization","sp":"Shivay Lamba, Qualcomm","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Distillation, quantization and hardware-aware optimization to run modern models on-device."},
+{"id":"665cc753","d":2,"s":"12:20","e":"12:38","t":"When a Small Language Model Beat Our LLM in Production","sp":"Avni Bhatt","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"A real case where an SLM replaced an LLM on latency, cost and reliability, with a hybrid escalation pattern."},
+{"id":"a309795f","d":2,"s":"12:40","e":"12:58","t":"Multi-Model Collaboration with Claude Code: How to Measure What Actually Works","sp":"Jack Rudenko, MadAppGang","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Claudish, an open-source proxy for any model in Claude Code, plus a framework for measuring multi-model setups."},
+{"id":"723e3fbe","d":2,"s":"13:00","e":"13:18","t":"Edge AI with Direct Device Control","sp":"Jeremy Kelaher, SBS","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Moving from cloud agents to direct device control on Orin Nano, ESP32 and Axera edge SoCs."},
+{"id":"0c685015","d":2,"s":"13:20","e":"13:38","t":"COBOL and AI: Building a Self-Serve Knowledge Layer for 2,000 Batch Jobs","sp":"Matthew Gillard, V2 AI","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Using AI to parse COBOL into control/data-flow structures and build a self-serve knowledge agent. Live demo."},
+{"id":"7cc0e242","d":2,"s":"13:40","e":"13:58","t":"Legacy Software + Agentic Discovery","sp":"Chris Rickard, Userdoc","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Turning millions of lines of legacy code into living requirements with agentic discovery patterns."},
+{"id":"e570f71e","d":2,"s":"15:00","e":"15:18","t":"Why LLMs Fall for Stories (And 5 Production Patterns That Actually Stop Them)","sp":"Mal Curtis, NVIDIA","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Why prompt injection is an inevitable consequence of training on human language, and layered defence patterns."},
+{"id":"be80e03a","d":2,"s":"15:20","e":"15:38","t":"Hacking the Model: AI Red Teaming in Practice","sp":"Pas Apicella, Snyk APJ","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"How models are actually exploited, from prompt injection to data exfiltration, and how to uncover those risks."},
+{"id":"4ce8f4cf","d":2,"s":"15:40","e":"15:58","t":"Why Most AI De-Identification Fails in Production","sp":"Moin Zaman, Smartnote","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Building SmartScrub, a reversible de-identification system lawyers actually trust. Live walkthrough."},
+{"id":"78b4af9a","d":2,"s":"16:00","e":"16:18","t":"Are Your AI Agents Secure? Defending the Privileged Agent","sp":"Daizen Ikehara, Auth0","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Excessive agency and identity abuse risks, and defensive measures for privileged agents."},
+{"id":"8699baf3","d":2,"s":"16:20","e":"16:38","t":"Your Agents Pass Every Benchmark—Then Memory Breaks Them in Production","sp":"Ananya Roy, Databricks","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"Designing and evaluating memory-enabled agents so memory makes them more reliable, not silently worse."},
+{"id":"8a1bbda2","d":2,"s":"16:40","e":"16:58","t":"AI Agents Are Distributed Systems","sp":"Lovee Jain","r":"Cinema 1","tr":"AI Engineering","ty":"Talk","ds":"What changes when a multi-tool MCP + Gemini ADK agent leaves localhost and becomes infrastructure."},
+
+{"id":"0716c074","d":2,"s":"12:00","e":"12:18","t":"Spec driven AI development - A Real World Perspective","sp":"Nick Beaugeard, Released Pty Ltd","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"What it takes to deliver spec-driven, commercially accountable AI systems that survive real users."},
+{"id":"54b9a2c6","d":2,"s":"12:20","e":"12:38","t":"Building SDKs in the Agentic Era","sp":"Mark McDonald, Google DeepMind","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"The training-cutoff knowledge gap and other challenges of maintaining open-source SDKs in the agentic era."},
+{"id":"de4cac0a","d":2,"s":"12:40","e":"12:58","t":"AGENTS.md is the wrong conversation","sp":"Jakub Riedl, ctx|","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Why a single static file isn't enough and agents need structured context, hierarchy and memory."},
+{"id":"fd14214b","d":2,"s":"13:00","e":"13:18","t":"Engineering without reading code","sp":"Ben Taylor, Stile Education","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Building small low-risk software without human review, and the systems that drive quality through AI review."},
+{"id":"24b18eea","d":2,"s":"13:20","e":"13:38","t":"The Death of Documentation","sp":"Josh Gillies, Prefactor","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Why the future is just-in-time understanding generated directly from code rather than static manuals."},
+{"id":"05bd2b94","d":2,"s":"13:40","e":"13:58","t":"Designing Inference-Native Systems","sp":"Sajjad Kamal, OnSet Health","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Designing systems built around inference from the onset rather than forcing everything into rigid workflows."},
+{"id":"3597a28e","d":2,"s":"15:00","e":"15:18","t":"Agentic SAST: Building an AI Pipeline for Rule Synthesis and Root-Cause Vulnerability Analysis","sp":"Danila Sashchenko, TikTok","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Autonomous agents that scan codebases, generate SAST rules and remove vulnerabilities at their source."},
+{"id":"95c55704","d":2,"s":"15:20","e":"15:38","t":"AI After an Apocalypse","sp":"Simon Knox, apartments.com.au","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Making big models more fault-tolerant and having a better time with the little ones offline."},
+{"id":"0e7cddbf","d":2,"s":"15:40","e":"15:58","t":"Stop vibing your agents to production: applying ML discipline to agent development","sp":"Justin Barias, Australian Government","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Applying the ML engineering playbook to agents, plus HoloDeck, an open-source distillation of the approach."},
+{"id":"c4814775","d":2,"s":"16:00","e":"16:18","t":"Fully Automated Luxury Gay Space Engineering","sp":"Daniel Rodgers-Pryor, Stile Education","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Building a fully automated maintenance loop at Stile: monitored, ticketed, fixed and deployed without humans."},
+{"id":"8586641c","d":2,"s":"16:20","e":"16:38","t":"12TB of AI coding agent logs - what works, what fails","sp":"Dave Slutzkin, Cadence","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Patterns across the tool, the codebase and the developer, from a huge corpus of agent session logs."},
+{"id":"f3d3d65b","d":2,"s":"16:40","e":"16:58","t":"Slop is a standards problem","sp":"David Lewis, Nine Entertainment","r":"Cinema 2","tr":"Software Engineering","ty":"Talk","ds":"Why slop happens when the standard isn't stated, and using configuration to raise the bar."},
+
+{"id":"c1f5da3b","d":2,"s":"12:00","e":"12:25","t":"Not Everything Needs an LLM","sp":"Dave Hall, Dave Hall Consulting","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"Gata, an open-source ticket router using a fine-tuned BERT model, and a framework for when you actually need an LLM."},
+{"id":"c28ecc4a","d":2,"s":"12:30","e":"12:55","t":"The AI Tax and \"legal\" ways to minimise it","sp":"Krishna Kanth Mundada, Versent","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"The hidden overhead of prompting, verifying and re-contextualising, and practical ways to minimise it."},
+{"id":"a5c632e9","d":2,"s":"13:00","e":"13:25","t":"Your engineers aren't afraid of AI. They're afraid of becoming junior again.","sp":"Andy Kelk","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"What really drives quiet resistance to AI tools, and what you can do about it."},
+{"id":"dd137234","d":2,"s":"13:30","e":"13:55","t":"Panel: Engineering Reality","sp":"AJ Fisher with Dave Hall, Krishna Mundada, Andy Kelk","r":"Swinburne Studio","tr":"Leadership","ty":"Panel","ds":"When not to reach for an LLM, the real costs of AI in production, and what it means for teams and careers."},
+{"id":"ebc489f4","d":2,"s":"15:00","e":"15:25","t":"From AI Survey to Production: What the Readiness Gap Actually Looks Like","sp":"Dr Christian Dandre, The Objective Company","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"A real organisational AI adoption journey end to end, and where the human and organisational layers broke."},
+{"id":"5665739d","d":2,"s":"15:30","e":"15:55","t":"What We Learned Taking a Culture-First Approach to AI Adoption at scale","sp":"Eric Grigson & Paul Hughes, Culture Amp","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"A culture-first AI rollout measured across 88 engineers, with honest data on what worked and what didn't."},
+{"id":"f8e0c7b8","d":2,"s":"16:00","e":"16:25","t":"Beat Burnout, Find Flourishing: The AI Edition","sp":"Navin Keswani, TANK","r":"Swinburne Studio","tr":"Leadership","ty":"Talk","ds":"A framework for defending teams against the vampiric pace of AI coding and nudging toward flourishing."},
+{"id":"26397c8c","d":2,"s":"16:30","e":"16:55","t":"Panel: Culture & People","sp":"Andrew Murphy with Christian Dandre, Eric Grigson, Paul Hughes, Navin Keswani","r":"Swinburne Studio","tr":"Leadership","ty":"Panel","ds":"Readiness, adoption, and keeping people healthy through the change. Closes the Leadership track."},
+
+{"id":"de3af587","d":2,"s":"11:15","e":"11:35","t":"Build Agent-Powered Workflows on Notion Developer Platform","sp":"Esti Frischling, Notion","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Notion's CLI, Workers and External Agent API for reliable, governed agent workflows."},
+{"id":"41ca9dd6","d":2,"s":"11:40","e":"12:00","t":"Why Engineering Velocity Still Breaks","sp":"Aldo Schumann, Vercel","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Where delivery actually stalls between commit and production, even on a modern stack."},
+{"id":"8c29bef6","d":2,"s":"12:00","e":"14:00","t":"Observability and Evaluation for LLM Apps and Agentic AI with Langfuse","sp":"Muhammad Ali, ClickHouse","r":"Gandel Digital Future Lab","tr":"Workshop","ty":"Workshop","ds":"Hands-on 2-hour workshop: go from a blind prototype to a fully observable system with Langfuse. Bring Python 3.10+ and a laptop."},
+{"id":"a3bfa109","d":2,"s":"14:10","e":"14:30","t":"Stop Rebuilding Authorisation: Accelerating AI Agent Development","sp":"Daizen Ikehara & Kevin Akermanis, Auth0","r":"Gandel Digital Future Lab","tr":"Hallway","ty":"Talk","ds":"Using Auth0 for AI Agents to handle dynamic permissions and human-in-the-loop controls out of the box."},
+
+{"id":"3583e42b","d":2,"s":"07:30","e":"08:45","t":"AI Leaders Roundtable Breakfast","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Invite-only leadership round table breakfast sponsored by Vercel. RSVP required. Cameo, ACMI."},
+{"id":"0b391360","d":2,"s":"08:00","e":"09:00","t":"Expo open, coffee available","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Drop in before the day starts for a coffee. Expo open. Zinc."},
+{"id":"7ccfc4cd","d":2,"s":"11:00","e":"12:00","t":"Lunch","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Food, hallway sessions and coffee. Zinc & Cameo, ACMI."},
+{"id":"366f966a","d":2,"s":"14:00","e":"15:00","t":"Afternoon break","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Final coffee and swag as the conference winds down. Zinc & Cameo, ACMI."},
+{"id":"6bb11cbd","d":2,"s":"17:30","e":"20:30","t":"Closing Drinks with Optiver","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Invite-only evening for leading AI engineers. RSVP required. Victoria by Farmer's Daughters."},
+{"id":"a2c05a7e","d":2,"s":"17:30","e":"19:30","t":"Closing Night Drinks presented by Sonar","sp":"","r":"Other","tr":"Social","ty":"Social","ds":"Open to all, no RSVP, just bring your badge. The Glasshouse, Transport Hotel, Federation Square."}
+]
+</script>
+
+<script>
+(function(){
+  var DATA = JSON.parse(document.getElementById("data").textContent);
+  var ROOMS = ["Cinema 1","Cinema 2","Swinburne Studio","Gandel Digital Future Lab"];
+  var ROOM_SHORT = {"Cinema 1":"Cinema 1","Cinema 2":"Cinema 2","Swinburne Studio":"Swinburne","Gandel Digital Future Lab":"Gandel Lab"};
+  var ROOM_TRACK = {"Cinema 1":"Keynote / AI Eng","Cinema 2":"Software Eng","Swinburne Studio":"Leadership","Gandel Digital Future Lab":"Hallway"};
+  var TRACK_COLOR = {"Keynote":"#7F77DD","AI Engineering":"#378ADD","Software Engineering":"#1D9E75","Leadership":"#EF9F27","Hallway":"#D85A30","Workshop":"#D4537E","Social":"#888780"};
+  var DAY_LABEL = {1:"Wednesday 3 June",2:"Thursday 4 June"};
+  var PXMIN = 1.35;
+  var KEY = "aieng2026.picks.v1";
+
+  var picks = load();
+  var state = {view:"timeline", day:1, q:""};
+
+  function load(){ try{ var v=JSON.parse(localStorage.getItem(KEY)); return Array.isArray(v)?v:[]; }catch(e){ return []; } }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(picks)); }catch(e){} }
+  function isPicked(id){ return picks.indexOf(id) !== -1; }
+  function togglePick(id){ var i=picks.indexOf(id); if(i===-1){picks.push(id);}else{picks.splice(i,1);} save(); refreshPickUI(); }
+  function mins(t){ var p=t.split(":"); return (+p[0])*60 + (+p[1]); }
+  function esc(s){ var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+  function byId(id){ for(var i=0;i<DATA.length;i++){ if(DATA[i].id===id) return DATA[i]; } return null; }
+
+  var elColhead=document.getElementById("colhead");
+  var elBody=document.getElementById("body");
+  var elAlsoOn=document.getElementById("alsoOn");
+  var elPickCount=document.getElementById("pickCount");
+  var elPicksList=document.getElementById("picksList");
+  var elPicksSummary=document.getElementById("picksSummary");
+  var elSearch=document.getElementById("search");
+
+  function refreshPickUI(){
+    elPickCount.textContent = picks.length;
+    document.querySelectorAll(".sess[data-id]").forEach(function(n){
+      var on=isPicked(n.getAttribute("data-id"));
+      n.classList.toggle("sel", on);
+      var st=n.querySelector(".star"); if(st) st.textContent = on ? "★" : "☆";
+    });
+    if(state.view==="picks") renderPicks();
+  }
+
+  function renderTimeline(){
+    var day=state.day;
+    var sessions=DATA.filter(function(x){ return x.d===day && x.r!=="Other"; });
+    var bands=DATA.filter(function(x){ return x.d===day && x.r==="Other" && /Lunch|Afternoon break/.test(x.t); });
+    var sideSocials=DATA.filter(function(x){ return x.d===day && x.r==="Other" && !/Lunch|Afternoon break/.test(x.t); });
+
+    var starts=sessions.map(function(x){return mins(x.s);});
+    var ends=sessions.map(function(x){return mins(x.e);});
+    var winStart=Math.floor(Math.min.apply(null,starts)/30)*30;
+    var winEnd=Math.ceil(Math.max.apply(null,ends)/30)*30;
+    var totalH=(winEnd-winStart)*PXMIN;
+
+    var hh='<div class="ch"></div>';
+    ROOMS.forEach(function(r){
+      hh+='<div class="ch"><div class="rm">'+esc(ROOM_SHORT[r])+'</div><div class="tk">'+esc(ROOM_TRACK[r])+'</div></div>';
+    });
+    elColhead.innerHTML=hh;
+
+    var gutter='<div class="gutter" style="height:'+totalH+'px;">';
+    for(var m=winStart; m<=winEnd; m+=60){
+      var top=(m-winStart)*PXMIN;
+      var hr=Math.floor(m/60), lbl=(hr<10?"0":"")+hr+":00";
+      gutter+='<div class="tick" style="top:'+top+'px;"><span>'+lbl+'</span></div>';
+    }
+    gutter+='</div>';
+
+    var bandHtml="";
+    bands.forEach(function(b){
+      var top=(mins(b.s)-winStart)*PXMIN, h=(mins(b.e)-mins(b.s))*PXMIN;
+      bandHtml+='<div class="band" style="top:'+top+'px; height:'+h+'px;"><span>'+esc(b.t)+' · '+b.s+'–'+b.e+'</span></div>';
+    });
+
+    var cols="";
+    ROOMS.forEach(function(r){
+      var inner="";
+      sessions.filter(function(x){return x.r===r;}).forEach(function(x){
+        var top=(mins(x.s)-winStart)*PXMIN, h=(mins(x.e)-mins(x.s))*PXMIN;
+        if(h<26) h=26;
+        var col=TRACK_COLOR[x.tr]||"#888";
+        var on=isPicked(x.id);
+        inner+='<div class="sess'+(on?" sel":"")+'" data-id="'+x.id+'" style="top:'+top+'px; height:'+(h-3)+'px; --tk:'+col+';">'+
+          '<div class="star" data-star="'+x.id+'">'+(on?"★":"☆")+'</div>'+
+          '<div class="st">'+x.s+'–'+x.e+'</div>'+
+          '<div class="ti">'+esc(x.t)+'</div>'+
+          (x.sp?'<div class="sp">'+esc(x.sp)+'</div>':'')+
+        '</div>';
+      });
+      cols+='<div class="col" style="height:'+totalH+'px;">'+inner+'</div>';
+    });
+
+    elBody.innerHTML=gutter+bandHtml+cols;
+
+    if(sideSocials.length){
+      var s='<div style="margin-top:14px;"><div style="font-size:13px;font-weight:600;margin-bottom:6px;">Also on around the venue</div>';
+      sideSocials.sort(function(a,b){return mins(a.s)-mins(b.s);}).forEach(function(x){
+        s+='<div class="sess" data-id="'+x.id+'" style="position:relative;left:0;right:0;display:block;margin-bottom:6px;--tk:'+TRACK_COLOR.Social+';">'+
+           '<div class="st">'+x.s+'–'+x.e+'</div><div class="ti">'+esc(x.t)+'</div></div>';
+      });
+      s+='</div>';
+      elAlsoOn.innerHTML=s;
+    } else { elAlsoOn.innerHTML=""; }
+
+    bindBlocks();
+    applySearch();
+  }
+
+  function bindBlocks(){
+    document.querySelectorAll(".sess[data-id]").forEach(function(n){
+      n.addEventListener("click", function(e){
+        var sid=e.target.getAttribute && e.target.getAttribute("data-star");
+        if(sid){ e.stopPropagation(); togglePick(sid); return; }
+        openModal(n.getAttribute("data-id"));
+      });
+    });
+  }
+
+  function applySearch(){
+    var q=state.q;
+    document.querySelectorAll("#body .sess[data-id]").forEach(function(n){
+      if(!q){ n.classList.remove("dim"); return; }
+      var x=byId(n.getAttribute("data-id"));
+      var hay=(x.t+" "+x.sp).toLowerCase();
+      n.classList.toggle("dim", hay.indexOf(q)===-1);
+    });
+  }
+
+  function renderPicks(){
+    var items=picks.map(byId).filter(Boolean).sort(function(a,b){
+      return a.d!==b.d ? a.d-b.d : (mins(a.s)-mins(b.s));
+    });
+    if(!items.length){
+      elPicksSummary.textContent="";
+      elPicksList.innerHTML='<div class="empty">No picks yet. Go to the timeline and tap the ☆ on any session.</div>';
+      return;
+    }
+    var clashIds={};
+    [1,2].forEach(function(day){
+      var ds=items.filter(function(x){return x.d===day;});
+      for(var i=0;i<ds.length;i++){
+        for(var j=i+1;j<ds.length;j++){
+          if(mins(ds[i].s)<mins(ds[j].e) && mins(ds[j].s)<mins(ds[i].e)){
+            clashIds[ds[i].id]=true; clashIds[ds[j].id]=true;
+          }
+        }
+      }
+    });
+    var nClash=Object.keys(clashIds).length;
+    elPicksSummary.textContent = items.length+" session"+(items.length===1?"":"s")+" selected"+(nClash? " · "+nClash+" in a time clash":" · no time clashes");
+
+    var html="";
+    [1,2].forEach(function(day){
+      var ds=items.filter(function(x){return x.d===day;});
+      if(!ds.length) return;
+      html+='<div class="daygroup"><h2>'+DAY_LABEL[day]+'</h2>';
+      ds.forEach(function(x){
+        var col=TRACK_COLOR[x.tr]||"#888";
+        var clash=clashIds[x.id];
+        html+='<div class="pcard'+(clash?" clash":"")+'" style="--tk:'+col+';">'+
+          '<div class="when">'+x.s+'–'+x.e+(clash?'<span class="clashtag">clash</span>':'')+'</div>'+
+          '<div class="meta"><div class="ti" data-open="'+x.id+'" style="cursor:pointer;">'+esc(x.t)+'</div>'+
+            (x.sp?'<div class="sp">'+esc(x.sp)+'</div>':'')+
+            '<div class="rm">'+(x.r==="Other"?esc(x.ty):esc(x.r))+'</div>'+
+          '</div>'+
+          '<button class="rmbtn" data-remove="'+x.id+'" title="Remove">✕</button>'+
+        '</div>';
+      });
+      html+='</div>';
+    });
+    elPicksList.innerHTML=html;
+
+    elPicksList.querySelectorAll("[data-remove]").forEach(function(b){
+      b.addEventListener("click", function(){ togglePick(b.getAttribute("data-remove")); });
+    });
+    elPicksList.querySelectorAll("[data-open]").forEach(function(b){
+      b.addEventListener("click", function(){ openModal(b.getAttribute("data-open")); });
+    });
+  }
+
+  var overlay=document.getElementById("overlay");
+  var modal=document.getElementById("modal");
+  function openModal(id){
+    var x=byId(id); if(!x) return;
+    var on=isPicked(id);
+    var loc = x.r==="Other" ? x.ty : x.r;
+    modal.innerHTML=
+      '<div class="mtop"><div><h3>'+esc(x.t)+'</h3></div>'+
+      '<button class="mclose" aria-label="Close">✕</button></div>'+
+      '<div class="mmeta">'+DAY_LABEL[x.d]+' · '+x.s+'–'+x.e+' · '+esc(loc)+'</div>'+
+      (x.sp?'<div class="mmeta">'+esc(x.sp)+'</div>':'')+
+      '<div class="mdesc">'+esc(x.ds)+'</div>'+
+      '<button class="madd'+(on?" rem":"")+'" data-id="'+id+'">'+(on?"Remove from my picks":"Add to my picks")+'</button>';
+    overlay.classList.add("show");
+    modal.querySelector(".mclose").addEventListener("click", closeModal);
+    modal.querySelector(".madd").addEventListener("click", function(){
+      togglePick(id);
+      var nowOn=isPicked(id);
+      var btn=modal.querySelector(".madd");
+      btn.textContent=nowOn?"Remove from my picks":"Add to my picks";
+      btn.classList.toggle("rem", nowOn);
+    });
+  }
+  function closeModal(){ overlay.classList.remove("show"); }
+  overlay.addEventListener("click", function(e){ if(e.target===overlay) closeModal(); });
+  document.addEventListener("keydown", function(e){ if(e.key==="Escape") closeModal(); });
+
+  function setView(v){
+    state.view=v;
+    document.querySelectorAll("#viewSeg button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-view")===v); });
+    document.getElementById("timelineView").style.display = v==="timeline" ? "" : "none";
+    document.getElementById("picksView").style.display = v==="picks" ? "" : "none";
+    if(v==="picks") renderPicks();
+  }
+  document.querySelectorAll("#viewSeg button").forEach(function(b){
+    b.addEventListener("click", function(){ setView(b.getAttribute("data-view")); });
+  });
+  document.getElementById("goPicks").addEventListener("click", function(){ setView("picks"); });
+  document.querySelectorAll("#daySeg button").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.day=+b.getAttribute("data-day");
+      document.querySelectorAll("#daySeg button").forEach(function(x){ x.classList.toggle("on", x===b); });
+      renderTimeline();
+    });
+  });
+  elSearch.addEventListener("input", function(){ state.q=elSearch.value.trim().toLowerCase(); applySearch(); });
+
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    if(picks.length && confirm("Remove all "+picks.length+" picks?")){ picks=[]; save(); refreshPickUI(); }
+  });
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    var items=picks.map(byId).filter(Boolean).sort(function(a,b){ return a.d!==b.d ? a.d-b.d : (mins(a.s)-mins(b.s)); });
+    if(!items.length){ alert("No picks to copy yet."); return; }
+    var lines=["My AI Engineer Melbourne 2026 picks",""];
+    var lastDay=null;
+    items.forEach(function(x){
+      if(x.d!==lastDay){ lines.push(DAY_LABEL[x.d]); lastDay=x.d; }
+      var loc=x.r==="Other"?x.ty:x.r;
+      lines.push("  "+x.s+"–"+x.e+"  "+x.t+(x.sp?" ("+x.sp+")":"")+" — "+loc);
+    });
+    var text=lines.join("\n");
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ alert("Copied your picks to the clipboard."); },
+        function(){ prompt("Copy your picks:", text); });
+    } else { prompt("Copy your picks:", text); }
+  });
+
+  refreshPickUI();
+  renderTimeline();
+  setView("timeline");
+})();
+</script>
+</body>
+</html>
