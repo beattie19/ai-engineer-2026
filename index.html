@@ -75,15 +75,15 @@
   .sess{
     position:absolute; left:3px; right:3px; z-index:2; overflow:hidden;
     background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--tk,#888);
-    border-radius:6px; padding:5px 7px; cursor:pointer;
+    border-radius:6px; padding:4px 6px; cursor:pointer;
   }
   .sess:hover{border-color:var(--border2);}
   .sess.sel{background:var(--accent-bg); border-color:var(--accent); border-left-color:var(--accent);}
   .sess .st{font-size:10px; color:var(--muted);}
-  .sess .ti{font-size:12px; font-weight:600; line-height:1.25; margin:1px 0 0;
-    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;}
-  .sess .sp{font-size:11px; color:var(--muted); margin-top:1px;
-    display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;}
+  .sess .ti{font-size:11px; font-weight:600; line-height:1.2; margin:0; padding-right:20px;
+    display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden;}
+  .sess .sp{font-size:10px; color:var(--muted); margin-top:2px; padding-right:20px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
   .sess.dim{opacity:0.25;}
   .star{position:absolute; top:3px; right:3px; width:20px; height:20px; line-height:20px; text-align:center; font-size:13px; border-radius:50%; color:var(--muted); background:transparent;}
   .sess.sel .star{color:var(--accent);}
@@ -304,7 +304,8 @@
   var ROOM_TRACK = {"Cinema 1":"Keynote / AI Eng","Cinema 2":"Software Eng","Swinburne Studio":"Leadership","Gandel Digital Future Lab":"Hallway"};
   var TRACK_COLOR = {"Keynote":"#7F77DD","AI Engineering":"#378ADD","Software Engineering":"#1D9E75","Leadership":"#EF9F27","Hallway":"#D85A30","Workshop":"#D4537E","Social":"#888780"};
   var DAY_LABEL = {1:"Wednesday 3 June",2:"Thursday 4 June"};
-  var PXMIN = 1.35;
+  var PXMIN = 2.5;
+  var MINH = 28;
   var KEY = "aieng2026.picks.v1";
 
   var picks = load();
@@ -373,14 +374,17 @@
       var inner="";
       sessions.filter(function(x){return x.r===r;}).forEach(function(x){
         var top=(mins(x.s)-winStart)*PXMIN, h=(mins(x.e)-mins(x.s))*PXMIN;
-        if(h<26) h=26;
+        if(h<MINH) h=MINH;
+        var boxH=h-3;
+        var maxLines=Math.max(1, Math.floor((boxH-8)/13.5));
+        var showSp = x.sp && maxLines>=3;
+        var titleLines = showSp ? maxLines-1 : maxLines;
         var col=TRACK_COLOR[x.tr]||"#888";
         var on=isPicked(x.id);
-        inner+='<div class="sess'+(on?" sel":"")+'" data-id="'+x.id+'" style="top:'+top+'px; height:'+(h-3)+'px; --tk:'+col+';">'+
+        inner+='<div class="sess'+(on?" sel":"")+'" data-id="'+x.id+'" title="'+x.s+'–'+x.e+'" style="top:'+top+'px; height:'+boxH+'px; --tk:'+col+';">'+
           '<div class="star" data-star="'+x.id+'">'+(on?"★":"☆")+'</div>'+
-          '<div class="st">'+x.s+'–'+x.e+'</div>'+
-          '<div class="ti">'+esc(x.t)+'</div>'+
-          (x.sp?'<div class="sp">'+esc(x.sp)+'</div>':'')+
+          '<div class="ti" style="-webkit-line-clamp:'+titleLines+';">'+esc(x.t)+'</div>'+
+          (showSp?'<div class="sp">'+esc(x.sp)+'</div>':'')+
         '</div>';
       });
       cols+='<div class="col" style="height:'+totalH+'px;">'+inner+'</div>';
